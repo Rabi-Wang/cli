@@ -16,7 +16,6 @@ module.exports = (env, argv) => {
     switch (argv.mode) {
       case 'development': return (() => {
         !argv.isDevServer && devConfig.plugins.push(
-          new CleanWebpackPlugin(),
           new AutoZipWebpackPlugin({
             filename: 'dist',
             entry: path.join(__dirname, '../dist'),
