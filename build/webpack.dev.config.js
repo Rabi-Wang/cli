@@ -11,15 +11,17 @@ let proxy = {}
 
 module.exports = {
   devServer: {
-    contentBase: path.join(__dirname, '../dist'),
-    historyApiFallback: true,
+    // contentBase: path.join(__dirname, '../dist'),
+    historyApiFallback: {
+      index: `/${version}/`
+    },
     compress: true,
     host: '127.0.0.1',
     port: 9000,
     hot: true,
     // proxy,
     publicPath: `/${version}/`,
-    writeToDisk: true,
+    // writeToDisk: true,
   },
 
   devtool: 'cheap-module-eval-source-map',

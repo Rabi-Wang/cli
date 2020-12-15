@@ -2,7 +2,6 @@ const { merge } = require('webpack-merge')
 const webpack = require('webpack')
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const path = require('path')
 const baseConfig = require('./webpack.base.config')
 const devConfig = require('./webpack.dev.config')
@@ -40,5 +39,5 @@ module.exports = (env, argv) => {
     return proConfig
   })()
 
-  return argv.isAnalyze ? smp.wrap(merge(baseConfig, config)) : merge(baseConfig, config)
+  return argv.isAnalyze ? smp.wrap(merge(baseConfig(env, argv), config)) : merge(baseConfig(env, argv), config)
 }
