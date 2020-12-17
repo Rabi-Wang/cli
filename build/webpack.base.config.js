@@ -34,12 +34,13 @@ module.exports = (env, argv) => {
         '@src': path.join(__dirname, '../src'),
         '@components': path.join(__dirname, '../src/components'),
         '@utils': path.join(__dirname, '../src/utils'),
-        // '@routes': path.join(__dirname, '../src/routes'),
-        // '@services': path.join(__dirname, '../src/services'),
+        '@pages': path.join(__dirname, '../src/pages'),
+        '@services': path.join(__dirname, '../src/services'),
         '@public': path.join(__dirname, '../src/public'),
         '@themes': path.join(__dirname, '../src/themes'),
-        // '@hooks': path.join(__dirname, '../src/hooks'),
+        '@hooks': path.join(__dirname, '../src/hooks'),
         '@stores': path.join(__dirname, '../src/stores'),
+        '@routes': path.join(__dirname, '../src/routes'),
       },
     },
 
@@ -71,6 +72,7 @@ module.exports = (env, argv) => {
                   ['@babel/plugin-proposal-decorators', { legacy: true }], // 支持装饰器语法, class和装饰器顺序不能反
                   ["@babel/plugin-proposal-class-properties", { "loose": true }], // 支持class语法
                   '@babel/plugin-proposal-object-rest-spread', // 支持对象解构语法
+                  '@babel/plugin-syntax-dynamic-import', // () => import('xxx')
                   ['import', { libraryName: 'antd', style: true, libraryDirectory: 'es' }, 'antd'], // 支持antd样式按需引入
                   // ['import', { libraryName: 'lodash', libraryDirectory: '', camel2DashComponentName: false }, 'lodash'], // 支持lodash按需引入
                 ],
