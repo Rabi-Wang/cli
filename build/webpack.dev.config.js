@@ -17,7 +17,7 @@ module.exports = {
     },
     compress: true,
     host: '127.0.0.1',
-    port: 9000,
+    port: 9001,
     hot: true,
     // proxy,
     publicPath: `/${version}/`,

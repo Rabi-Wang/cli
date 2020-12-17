@@ -8,7 +8,7 @@ const threadLoader = require('thread-loader')
 const { version } = require('../package.json')
 
 const themeVars = (() => {
-  const themePath = path.join(__dirname, '../src/themes/default.less')
+  const themePath = path.join(__dirname, '../src/themes/index.global.less')
   return lessToJs(fs.readFileSync(themePath, 'utf8'))
 })()
 
@@ -40,7 +40,7 @@ module.exports = (env, argv) => {
         '@themes': path.join(__dirname, '../src/themes'),
         '@hooks': path.join(__dirname, '../src/hooks'),
         '@stores': path.join(__dirname, '../src/stores'),
-        '@routes': path.join(__dirname, '../src/routes'),
+        '@config': path.join(__dirname, '../src/config'),
       },
     },
 
@@ -81,7 +81,28 @@ module.exports = (env, argv) => {
           ],
           exclude: /node_modules/,
         },
+        // {
+        //   test: /^(.*\.global).*\.less/,
+        //   // test: /\.less$/,
+        //   use: [
+        //     'thread-loader',
+        //     'style-loader',
+        //     'css-loader',
+        //     {
+        //       loader: 'less-loader',
+        //       options: {
+        //         lessOptions: {
+        //           javascriptEnabled: true,
+        //         },
+        //       },
+        //     },
+        //   ],
+        //   include: [
+        //     path.resolve(__dirname, '../src/'),
+        //   ],
+        // },
         {
+          // test: /^(?!.*\.global).*\.less/,
           test: /\.less$/,
           use: [
             'thread-loader',
@@ -91,7 +112,7 @@ module.exports = (env, argv) => {
               options: {
                 modules: {
                   auto: true,
-                  localIdentName: '[hash:base64:6]',
+                  localIdentName: '[name]-[hash:base64:5]',
                 },
                 importLoaders: 1,
               },
