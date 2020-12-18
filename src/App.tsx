@@ -26,7 +26,6 @@ const MenuItem = Menu.Item
 
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false)
-  console.log(styles)
 
   return (
     <Router>

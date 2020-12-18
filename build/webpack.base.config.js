@@ -5,6 +5,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const lessToJs = require('less-vars-to-js')
 const fs = require('fs')
 const threadLoader = require('thread-loader')
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const { version } = require('../package.json')
 
 const themeVars = (() => {
@@ -191,6 +192,7 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         filename: '[name].css',
       }),
+      new HardSourceWebpackPlugin(),
     ],
   }
 }
