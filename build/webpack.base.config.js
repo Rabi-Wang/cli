@@ -1,6 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const lessToJs = require('less-vars-to-js')
 const fs = require('fs')
@@ -81,32 +81,11 @@ module.exports = (env, argv) => {
           ],
           exclude: /node_modules/,
         },
-        // {
-        //   test: /^(.*\.global).*\.less/,
-        //   // test: /\.less$/,
-        //   use: [
-        //     'thread-loader',
-        //     'style-loader',
-        //     'css-loader',
-        //     {
-        //       loader: 'less-loader',
-        //       options: {
-        //         lessOptions: {
-        //           javascriptEnabled: true,
-        //         },
-        //       },
-        //     },
-        //   ],
-        //   include: [
-        //     path.resolve(__dirname, '../src/'),
-        //   ],
-        // },
         {
-          // test: /^(?!.*\.global).*\.less/,
           test: /\.less$/,
           use: [
-            'thread-loader',
-            'style-loader',
+            // 'thread-loader',
+            `${argv.mode === 'development' ? MiniCssExtractPlugin.loader : 'style-loader'}`,
             {
               loader: 'css-loader',
               options: {
@@ -130,8 +109,60 @@ module.exports = (env, argv) => {
           ],
           include: [
             path.resolve(__dirname, '../src/'),
+          ],
+          exclude: /\.module\.less$/,
+        },
+        // css module 支持
+        {
+          test: /\.module\.less$/,
+          use: [
+            // 'thread-loader',
+            `${argv.mode === 'development' ? MiniCssExtractPlugin.loader : 'style-loader'}`,
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+              },
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  modifyVars: themeVars,
+                  javascriptEnabled: true,
+                },
+              },
+            },
+          ],
+          exclude: /node_modules/,
+        },
+        // antd 样式
+        {
+          test: /\.less$/,
+          use: [
+            'thread-loader',
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+              },
+            },
+            {
+              loader: 'less-loader',
+              options: {
+                lessOptions: {
+                  modifyVars: themeVars,
+                  javascriptEnabled: true,
+                },
+              },
+            },
+          ],
+          include: [
             path.resolve(__dirname, '../node_modules/antd/'),
           ],
+          exclude: /src/
         },
         {
           test: /\.(png|jpg|gif|svg)$/,
@@ -157,10 +188,9 @@ module.exports = (env, argv) => {
         from: path.join(__dirname, '../src/public'),
         to: path.join(__dirname, '../dist'),
       }]),
-      // new MiniCssExtractPlugin({
-      //   filename: '[name].css',
-      //   chunkFilename: '[id].css',
-      // }),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+      }),
     ],
   }
 }
