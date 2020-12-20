@@ -19,12 +19,18 @@ export const routes: IRoutes[] = [
   {
     path: '/home',
     component: React.lazy(() => import('@pages/home')),
-  }
+  },
+  {
+    path: '/todoList',
+    component: React.lazy(() => import('@pages/todoList')),
+  },
 ]
 
-export const RouteWithSubRoutes:React.FC<IRoutes> = (route) => {
+export const routeWithSubRoutes = (key: any, route: IRoutes) => {
   return (
     <Route
+      key={key}
+      exact={route.exact === undefined ? true : route.exact}
       path={route.path}
       render={props => (
         <Suspense fallback={<div>loading...</div>}>

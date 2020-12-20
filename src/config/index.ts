@@ -1,2 +1,2 @@
-export { routes, RouteWithSubRoutes } from './routes'
+export { routes, routeWithSubRoutes } from './routes'
 export { proxy } from './proxy'
