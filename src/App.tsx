@@ -28,16 +28,21 @@ const App: React.FC = () => {
   const history = useHistory()
 
   const handleMenuClick = (item: any) => {
-    history.push(`/${item.key}`)
+    history.push(`${item.key}`)
   }
 
   return (
     <Layout>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className={styles.logo} />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['home']} onClick={handleMenuClick}>
-          <MenuItem key="home" icon={<UserOutlined />}>home</MenuItem>
-          <MenuItem key="todoList" icon={<VideoCameraOutlined />}>todo</MenuItem>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={['/home']} onClick={handleMenuClick}>
+          {routes.map((route, index) => {
+            if (route.path !== '/') {
+              return <MenuItem key={route.path}>{route.path.substring(1)}</MenuItem>
+            }
+          })}
+          {/*<MenuItem key="home" icon={<UserOutlined />}>home</MenuItem>*/}
+          {/*<MenuItem key="todoList" icon={<VideoCameraOutlined />}>todo</MenuItem>*/}
           {/*<MenuItem key="3" icon={<UploadOutlined />}>nav 3</MenuItem>*/}
         </Menu>
       </Sider>
@@ -57,7 +62,7 @@ const App: React.FC = () => {
           className={styles.siteLayoutBackground}
         >
           <Switch>
-            {routes.map((route, index) => {
+            {routes.map((route, index: number) => {
                 return routeWithSubRoutes(index, route)
               })}
           </Switch>
