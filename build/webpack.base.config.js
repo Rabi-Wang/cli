@@ -6,7 +6,13 @@ const lessToJs = require('less-vars-to-js')
 const fs = require('fs')
 const threadLoader = require('thread-loader')
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-const { version } = require('../package.json')
+const {
+  srcDir,
+  distDir,
+  publicPath,
+  version,
+  resourceFrom,
+} = require('./paths')
 
 const themeVars = (() => {
   const themePath = path.join(__dirname, '../src/themes/index.global.less')
@@ -21,12 +27,12 @@ threadLoader.warmup({}, [
 
 module.exports = (env, argv) => {
   return {
-    entry: path.join(__dirname, '../src/index.tsx'),
+    entry: `${srcDir}/index.tsx`,
 
     output: {
       filename: '[name].[hash].js',
-      path: path.resolve(__dirname, `../dist/${version}`),
-      publicPath: `/${version}/`,
+      path:  `${distDir}/${version}`,
+      publicPath: publicPath,
     },
 
     resolve: {
@@ -182,12 +188,12 @@ module.exports = (env, argv) => {
 
     plugins: [
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, '../src/index.html'),
-        filename: argv.isDevServer ? 'index.html' : path.resolve(__dirname, '../dist/index.html'),
+        template: `${srcDir}/index.html`,
+        filename: argv.isDevServer ? 'index.html' : `${distDir}/index.html`,
       }),
       new CopyWebpackPlugin([{
-        from: path.join(__dirname, '../src/public'),
-        to: path.join(__dirname, '../dist'),
+        from: resourceFrom,
+        to: distDir,
       }]),
       new MiniCssExtractPlugin({
         filename: '[name].css',

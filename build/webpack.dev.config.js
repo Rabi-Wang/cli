@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
-const { version } = require('../package.json')
 const { AutoRoutesWebpackPlugin, AutoZipWebpackPlugin } = require('./webpackPlugin')
+const { publicPath, distDir, zipName, zipOutputPath } = require('./paths')
 
 let proxies = []
 let proxy = {}
@@ -14,14 +14,14 @@ module.exports = (env, argv) => {
     devServer: {
       // contentBase: path.join(__dirname, '../dist'),
       historyApiFallback: {
-        index: `/${version}/`
+        index: publicPath,
       },
       compress: true,
       host: '127.0.0.1',
       port: 9001,
       hot: true,
       // proxy,
-      publicPath: `/${version}/`,
+      publicPath,
       // writeToDisk: true,
     },
 
@@ -45,9 +45,9 @@ module.exports = (env, argv) => {
     }))
   } else {
     config.plugins.push(new AutoZipWebpackPlugin({
-      filename: 'dist',
-      entry: path.join(__dirname, '../dist'),
-      outputPath: path.join(__dirname, '../'),
+      filename: zipName,
+      entry: distDir,
+      outputPath: zipOutputPath,
     }))
   }
 
