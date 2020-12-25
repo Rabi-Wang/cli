@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const { AutoRoutesWebpackPlugin, AutoZipWebpackPlugin } = require('./webpackPlugin')
-const { publicPath, distDir, zipName, zipOutputPath } = require('./paths')
+const { publicPath, distDir, zipName, zipOutputPath, srcDir } = require('./paths')
 
 let proxies = []
 let proxy = {}
@@ -40,8 +40,8 @@ module.exports = (env, argv) => {
 
   if (argv.isDevServer) {
     config.plugins.push(new AutoRoutesWebpackPlugin({
-      routesPath: path.resolve(__dirname, '../src/config/routes.ts'),
-      pagesPath: path.resolve(__dirname, '../src/pages'),
+      routesPath: path.join(srcDir, '/config/routes.ts'),
+      pagesPath: path.join(srcDir, '/pages'),
     }))
   } else {
     config.plugins.push(new AutoZipWebpackPlugin({

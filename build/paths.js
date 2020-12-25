@@ -1,14 +1,17 @@
 const { version } = require('../package.json')
 const path = require('path')
 
+const basePath = process.cwd()
+
 module.exports = {
   publicPath: `/${version}/`,
   distName: 'dist',
-  distDir: path.resolve(__dirname, '../dist/'),
-  srcDir: path.resolve(__dirname, `../src/`),
+  distDir: path.resolve(basePath, './dist/'),
+  srcDir: path.resolve(basePath, './src/'),
   htmlName: 'index.html',
   zipName: 'dist',
-  zipOutputPath: path.resolve(__dirname, '../'),
-  resourceFrom: path.resolve(__dirname, '../src/public/'),
+  zipOutputPath: basePath,
+  resourceFrom: path.resolve(basePath, './src/public/'),
   version,
+  nodeModulesDir: path.resolve(basePath, './node_modules')
 }

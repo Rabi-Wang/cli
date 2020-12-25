@@ -12,10 +12,11 @@ const {
   publicPath,
   version,
   resourceFrom,
+  nodeModulesDir,
 } = require('./paths')
 
 const themeVars = (() => {
-  const themePath = path.join(__dirname, '../src/themes/index.global.less')
+  const themePath = path.join(srcDir, '/themes/index.global.less')
   return lessToJs(fs.readFileSync(themePath, 'utf8'))
 })()
 
@@ -38,16 +39,16 @@ module.exports = (env, argv) => {
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json', '.css', '.less'],
       alias: {
-        '@src': path.join(__dirname, '../src'),
-        '@components': path.join(__dirname, '../src/components'),
-        '@utils': path.join(__dirname, '../src/utils'),
-        '@pages': path.join(__dirname, '../src/pages'),
-        '@services': path.join(__dirname, '../src/services'),
-        '@public': path.join(__dirname, '../src/public'),
-        '@themes': path.join(__dirname, '../src/themes'),
-        '@hooks': path.join(__dirname, '../src/hooks'),
-        '@stores': path.join(__dirname, '../src/stores'),
-        '@config': path.join(__dirname, '../src/config'),
+        '@src': srcDir,
+        '@components': path.join(srcDir, '/components'),
+        '@utils': path.join(srcDir, '/utils'),
+        '@pages': path.join(srcDir, '/pages'),
+        '@services': path.join(srcDir, '/services'),
+        '@public': path.join(srcDir, '/public'),
+        '@themes': path.join(srcDir, '/themes'),
+        '@hooks': path.join(srcDir, '/hooks'),
+        '@stores': path.join(srcDir, '/stores'),
+        '@config': path.join(srcDir, '/config'),
       },
     },
 
@@ -114,9 +115,7 @@ module.exports = (env, argv) => {
               },
             },
           ],
-          include: [
-            path.resolve(__dirname, '../src/'),
-          ],
+          include: [srcDir],
           exclude: /\.module\.less$/,
         },
         // css module 支持
@@ -167,7 +166,7 @@ module.exports = (env, argv) => {
             },
           ],
           include: [
-            path.resolve(__dirname, '../node_modules/antd/'),
+            path.join(nodeModulesDir, '/antd/'),
           ],
           exclude: /src/
         },
