@@ -11,7 +11,7 @@ module.exports = {
   htmlName: 'index.html',
   zipName: 'dist',
   zipOutputPath: basePath,
-  resourceFrom: path.resolve(basePath, './src/public/'),
+  resourceFrom: path.resolve(basePath, './public/'),
   version,
   nodeModulesDir: path.resolve(basePath, './node_modules')
 }

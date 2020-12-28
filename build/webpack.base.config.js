@@ -187,7 +187,7 @@ module.exports = (env, argv) => {
 
     plugins: [
       new HtmlWebpackPlugin({
-        template: `${srcDir}/index.html`,
+        template: `${resourceFrom}/index.html`,
         filename: argv.isDevServer ? 'index.html' : `${distDir}/index.html`,
       }),
       new CopyWebpackPlugin([{
