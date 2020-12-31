@@ -16,6 +16,7 @@
     "execa": "^5.0.0",
     "fs-extra": "^9.0.1",
     "inquirer": "^7.3.3",
+    "minimist": "^1.2.5",
     "semver": "^7.3.4",
     "validate-npm-package-name": "^3.0.0"
   }

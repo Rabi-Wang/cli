@@ -66,7 +66,7 @@ export const routes: IRoutes[] = [
   }
 
   apply (compiler) {
-    compiler.hooks.watchRun .tapAsync('AutoRoutesWebpackPlugin', async (params, callback) => {
+    compiler.hooks.watchRun.tapAsync('AutoRoutesWebpackPlugin', async (params, callback) => {
       try {
         await this.init()
         await this.writeRoute(this.routesPath, this.pagesPath)
