@@ -5,6 +5,9 @@ const inquirer = require('inquirer')
 const validatePackageName = require('validate-npm-package-name')
 const execSync = require('child_process').execSync
 const { spawn } = require('cross-spawn')
+const ora = require('ora')
+const logSymbols = require('log-symbols')
+const download = require('download-git-repo')
 
 async function create(projectName, options) {
   const cwd = options.cwd || process.cwd()
@@ -12,18 +15,25 @@ async function create(projectName, options) {
   const name = inCurrent ? path.resolve('../', cwd) : projectName
   const targetDir = path.resolve(cwd, projectName || '.')
   const result = validatePackageName(name)
-  const { fource } = options
+  const { force } = options
 
   if (!result.validForNewPackages) {
     console.error(chalk.red(`invalid project name ${name}`))
-    result.errors && result.errors.forEach(err => console.error(chalk.red.dim('❌ ' + err)))
-    result.warnings && result.warnings.forEach(warn => console.error(chalk.red.dim('⚠ ' + warn)))
+    result.errors && result.errors.forEach(err => console.error(chalk.red.dim(`${logSymbols.error} ${err}`)))
+    result.warnings && result.warnings.forEach(warn => console.error(chalk.red.dim(`${logSymbols.warning} ${warn}`)))
     process.exit(1)
   }
 
   if (fs.existsSync(targetDir)) {
-     if (fource) {
-       await fs.remove(targetDir)
+     const spinner = ora(`Removing ${chalk.cyan(targetDir)}`)
+     if (force) {
+       try {
+         spinner.start()
+         await fs.remove(targetDir)
+         spinner.succeed()
+       } catch (e) {
+         spinner.fail()
+       }
      } else {
        const { action } = await inquirer.prompt({
          name: 'action',
@@ -38,8 +48,13 @@ async function create(projectName, options) {
        if (!action) {
          return
        } else if (action === 'overwrite') {
-         console.log(`\nRemoving ${chalk.cyan(targetDir)}...`)
-         await fs.remove(targetDir)
+         try {
+           spinner.start()
+           await fs.remove(targetDir)
+           spinner.succeed()
+         } catch (e) {
+           spinner.fail()
+         }
        }
      }
   }
@@ -59,8 +74,29 @@ async function create(projectName, options) {
   //   JSON.stringify(packageJson, null, 2)
   // )
 
-  fs.copySync(path.join(__dirname, '../template'), targetDir)
-  fs.copySync(path.join(__dirname, '../build'), path.join(targetDir, './build'))
+  const spinner = ora('creating template')
+  try {
+    spinner.start()
+    let downloadUrl = 'http://10.124.163.76:8888/group-customer-platform/OrderCenter/frontend/frontend.git'
+    let downlaodTarget = path.join(__dirname, '../test')
+    // await downloadTemplate(downloadUrl, downlaodTarget)
+
+    if (fs.existsSync(path.join(__dirname, '../template'))) {
+      fs.copySync(path.join(__dirname, '../template'), targetDir)
+      const packageJson = require(path.join(targetDir, './package.json'))
+      packageJson.name = projectName
+      fs.writeFileSync(
+        path.join(targetDir, 'package.json'),
+        JSON.stringify(packageJson, null, 2)
+      )
+    }
+    if (fs.existsSync(path.join(__dirname, '../build'))) {
+      fs.copySync(path.join(__dirname, '../build'), path.join(targetDir, './build'))
+    }
+    spinner.succeed()
+  } catch (e) {
+    spinner.fail()
+  }
 
   const templatePackageJsonPath = path.join(targetDir, './package.json')
   const hasPackageJson = fs.existsSync(templatePackageJsonPath)
@@ -72,18 +108,39 @@ async function create(projectName, options) {
     depsKeys.forEach(key => deps.push(`${key}@${dependencies[key]}`))
     devDepsKeys.forEach(key => deps.push(`${key}@${devDependencies[key]}`))
     installDependencies(targetDir, deps).then(() => {
-      console.log(chalk.green(`✔ create ${projectName} success, joy codding`))
+      console.log(chalk.green(`${logSymbols.success} create ${projectName} success, joy codding`))
 
-      if (shouldUseYarn()) {
-        execSync('yarn run start', { cwd: targetDir, stdio: 'inherit' })
-      } else {
-        execSync('npm start', { cwd: targetDir })
+      try {
+        if (shouldUseYarn()) {
+          execSync('yarn run start', { cwd: targetDir, stdio: 'inherit' })
+        } else {
+          execSync('npm start', { cwd: targetDir })
+        }
+      } catch (e) {
+        console.log(e)
       }
     })
   }
 
   // const generator = new Generator(name, targetDir)
   // await generator.create()
+}
+
+function downloadTemplate(url, target) {
+  return new Promise((resolve, reject) => {
+    const spinner = ora('download template')
+    spinner.start()
+    download(url, target, { clone: true }, (err) => {
+      if (err) {
+        console.log(chalk.red(err))
+        spinner.fail()
+        reject(err)
+      } else {
+        spinner.succeed()
+        resolve()
+      }
+    })
+  })
 }
 
 function shouldUseYarn() {

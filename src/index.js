@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 const { Command } = require('commander')
 const minimist = require('minimist')
 const semver = require('semver')
@@ -21,7 +22,7 @@ program
   .version(`${packageJson.version}`, '-v, --version')
 
 program
-  .command('create-horo-app <app-name>')
+  .arguments('<app-name>')
   .description('create a new project')
   .option('-f, --force', 'Overwrite target directory if it exists')
   .action((name, cmd) => {
