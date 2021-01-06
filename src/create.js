@@ -89,6 +89,7 @@ async function create(projectName, options) {
         path.join(targetDir, 'package.json'),
         JSON.stringify(packageJson, null, 2)
       )
+      execSync('npm init --y', { cwd: targetDir, stdio: 'inherit' })
     }
     if (fs.existsSync(path.join(__dirname, '../build'))) {
       fs.copySync(path.join(__dirname, '../build'), path.join(targetDir, './build'))

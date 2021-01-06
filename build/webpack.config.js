@@ -4,7 +4,7 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const baseConfig = require('./webpack.base.config')
 const devConfig = require('./webpack.dev.config')
-const proConfig = require('./webpack.pro.config')
+const proConfig = require('./webpack.pro.config')()
 
 const smp = new SpeedMeasurePlugin()
 
@@ -18,13 +18,13 @@ module.exports = (env, argv) => {
         proConfig.plugins[0] = new webpack.DefinePlugin({
           HTTP_ENV: JSON.stringify('test'),
         })
-        return proConfig
+        return () => proConfig
       })()
-      default: return proConfig
+      default: return () => proConfig
     }
   })() : (() => {
     proConfig.plugins.push(new BundleAnalyzerPlugin())
-    return proConfig
+    return () => proConfig
   })()
 
   return argv.isAnalyze ? smp.wrap(merge(baseConfig(env, argv), config(env, argv))) : merge(baseConfig(env, argv), config(env, argv))
